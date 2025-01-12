@@ -61,11 +61,11 @@ export class Card extends Component<ICard> {
     }
 
 	set buttonText(value: string) {
-		this._button.textContent = value;
+		this.setText(this._button, value);
 	}
 
     set index(value: string) {
-        this._index.textContent = value;
+        this.setText(this._index, value);
     }
     
     get index(): string {

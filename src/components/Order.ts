@@ -22,7 +22,7 @@ export class Order extends Form<IOrderForm> {
 
         this._onlinePayButton = ensureElement<HTMLButtonElement>('button[name="card"]', this.container);
         this._cashPayButton = ensureElement<HTMLButtonElement>('button[name="cash"]', this.container);
-        this._onlinePayButton.classList.add('button_alt-active');
+        this.toggleClass(this._onlinePayButton, 'button_alt-active', true);
         
         if (actions?.onClick) {
             this._onlinePayButton.addEventListener('click', actions.onClick);
@@ -32,9 +32,10 @@ export class Order extends Form<IOrderForm> {
         this._address = ensureElement<HTMLInputElement>('input', this.container);
     }
 
-    togglePayButtons(){
-        this._onlinePayButton.classList.toggle('button_alt-active');
-        this._cashPayButton.classList.toggle('button_alt-active');
+    togglePayButtons(activeButton: HTMLButtonElement) {
+        this.toggleClass(this._onlinePayButton, 'button_alt-active', false);
+        this.toggleClass(this._cashPayButton, 'button_alt-active', false);
+        this.toggleClass(activeButton, 'button_alt-active');
       }
     
     set address(value: string) {

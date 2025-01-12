@@ -6,12 +6,12 @@ import { EventEmitter } from "./components/base/events";
 import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
 import { AppState, CatalogChangeEvent, ProductItem } from "./components/AppData";
 import { Page } from "./components/Page";
-import { Basket } from "./components/common/Basket";
+import { Basket } from "./components/Basket";
 import { Order, PaymentMethods, Contacts } from "./components/Order";
 import { Modal } from "./components/common/Modal";
 import { Card } from "./components/Card";
 import { IProductItem, IOrderForm, IOrder } from "./types/index";
-import { Success } from "./components/common/Success";
+import { Success } from "./components/Success";
 
 const events = new EventEmitter();
 const api = new StoreApi(CDN_URL, API_URL);
@@ -105,13 +105,11 @@ events.on('formErrors:change', (errors: Partial<IOrder>) => {
   });
   
 // Изменение полей заказа и контактов 
-events.on(/^order\..*:change/, (data: {field: keyof IOrderForm, value: string}) => {
-    appData.setOrderField(data.field, data.value)
-})
-
-events.on(/^contacts\..*:change/, (data: {field: keyof IOrderForm, value: string}) => {
-    appData.setOrderField(data.field, data.value)
-})
+const changeEvent = (data: {field: keyof IOrderForm, value: string}) => {
+    appData.setOrderField(data.field, data.value);
+};
+events.on(/^order\..*:change/, changeEvent);
+events.on(/^contacts\..*:change/, changeEvent);
 
 // Открытие формы заказа  
 events.on('order:open', () => {
@@ -207,10 +205,10 @@ events.on('counter:changed', (event: string[]) => {
 
 // Переключение способа оплаты
 events.on('payment:toggle', (target: HTMLElement) => {
-    if(!target.classList.contains('button_alt-active')){
-      order.togglePayButtons();
-      appData.order.payment = PaymentMethods[target.getAttribute('name')];
-    }
+  if(!target.classList.contains('button_alt-active')){
+    order.togglePayButtons(target as HTMLButtonElement);
+    appData.order.payment = PaymentMethods[target.getAttribute('name') as keyof typeof PaymentMethods];
+  }
 })
 
 // Открытие модальное окно

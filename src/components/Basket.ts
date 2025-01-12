@@ -1,6 +1,6 @@
-import { Component } from '../base/Component';
-import { createElement, ensureElement } from '../../utils/utils';
-import { EventEmitter } from '../base/events';
+import { Component } from './base/Component';
+import { createElement, ensureElement } from '../utils/utils';
+import { EventEmitter } from './base/events';
 
 interface IBasketView {
     items: HTMLElement[];
@@ -31,12 +31,12 @@ export class Basket extends Component<IBasketView> {
     set items(items: HTMLElement[]) {
         if (items.length > 0) {
             this._list.replaceChildren(...items);
-            this.setDisabled(this._button, false);
+            this.toggleButton(false);
         } else {
             this._list.replaceChildren(createElement<HTMLParagraphElement>('p', {
                 textContent: 'Корзина пуста. Добавьте товары!'
             }));
-            this.setDisabled(this._button, true);
+            this.toggleButton(true);
         }
     }
 
@@ -45,7 +45,8 @@ export class Basket extends Component<IBasketView> {
     }
 
     toggleButton(disabled: boolean){
-        this._button.disabled = disabled;
+        this.setDisabled(this._button, disabled);
     }
+
 }
 
